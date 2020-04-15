@@ -15,6 +15,46 @@ var createScene = function () {
 	camera.keysDown.push(83)   //D
 	camera.keysLeft.push(65);  //A
 	camera.keysRight.push(68); //S
+	//We start without being locked.
+	var isLocked = false;
+
+	// On click event, request pointer lock
+	scene.onPointerDown = function (evt) {
+
+		//true/false check if we're locked, faster than checking pointerlock on each single click.
+		if (!isLocked) {
+			canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+			if (canvas.requestPointerLock) {
+				canvas.requestPointerLock();
+			}
+		}
+
+		//continue with shooting requests or whatever :P
+		//evt === 0 (left mouse click)
+		//evt === 1 (mouse wheel click (not scrolling))
+		//evt === 2 (right mouse click)
+	};
+
+
+	// Event listener when the pointerlock is updated (or removed by pressing ESC for example).
+	var pointerlockchange = function () {
+		var controlEnabled = document.mozPointerLockElement || document.webkitPointerLockElement || document.msPointerLockElement || document.pointerLockElement || null;
+
+		// If the user is already locked
+		if (!controlEnabled) {
+			camera.detachControl(canvas);
+			isLocked = false;
+		} else {
+			camera.attachControl(canvas);
+			isLocked = true;
+		}
+	};
+
+	// Attach events to the document
+	document.addEventListener("pointerlockchange", pointerlockchange, false);
+	document.addEventListener("mspointerlockchange", pointerlockchange, false);
+	document.addEventListener("mozpointerlockchange", pointerlockchange, false);
+	document.addEventListener("webkitpointerlockchange", pointerlockchange, false);
 	light.position = new BABYLON.Vector3(20, 60, 30);
 
 	scene.ambientColor = BABYLON.Color3.FromInts(10, 30, 10);

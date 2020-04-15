@@ -20,7 +20,7 @@ async function doStory() {
 		await sleep(1000)
 		say("<b>GAME:</b><i>  Use the W, A, S and D keys to move around.</i>")
 		await sleep(100)
-		say("<b>GAME:</b><i>  Click and drag with your mouse to look around.</i>")
+		say("<b>GAME:</b><i>  Click on the screen and use your mouse to look around.</i>")
 		
 }
 document.onload = doStory();
